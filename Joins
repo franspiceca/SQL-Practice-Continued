@@ -1,0 +1,34 @@
+-- Starwars Data Set
+
+SELECT Environment, COUNT(Environment) AS PlanetsWithEnvironment
+FROM ENVIRONMENT
+GROUP BY Environment
+HAVING COUNT(Environment) >= 2;
+
+
+SELECT Sex, MIN(Age) AS MinimunAge, MAX(Age) AS MaxAge, AVG(Age) AS AverageAge
+FROM PERSON
+WHERE Sex = 'female'
+GROUP BY Sex;
+
+
+SELECT PersonID, FirstName ||' '|| MiddleName ||' '|| LastName AS FullName, Age, PLANET.Planet
+FROM PERSON RIGHT JOIN PLANET
+ON PERSON.Planet = PLANET.PlanetID
+WHERE PLANET.Planet = 'Tatooine';
+
+
+SELECT PERSON.FirstName, PERSON.Height, SPECIES.Species, SPECIES.AverageHeight, PLANET.Planet
+FROM PERSON, SPECIES, PLANET
+WHERE PERSON.Species = SPECIES.SpeciesID
+AND PERSON.Planet = PLANET.PlanetID
+AND Height < 100
+ORDER BY Height ASC;
+
+
+SELECT PersonID, FirstName, ROUND((Mass/(POWER((Height/100), 2))), 1) AS BMI, Sex, SPECIES.Species
+FROM PERSON FULL OUTER JOIN SPECIES
+ON PERSON.Species = SPECIES.SpeciesID
+WHERE ROUND((Mass/(POWER((Height/100), 2))), 1) IS NOT NULL AND SPECIES.Species <> 'Droid'
+ORDER BY BMI DESC
+FETCH FIRST 10 ROWS ONLY;
